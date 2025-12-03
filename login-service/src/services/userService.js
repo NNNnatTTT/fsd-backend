@@ -19,7 +19,7 @@ axiosRetry(axios, { retries: 3, retryDelay: axiosRetry.exponentialDelay });
 // Environment Configuration (DevOps Best Practice)
 // ----------------------------------------------------------
 // const USER_SERVICE_URL = process.env.USER_SERVICE_URL || "http://localhost:3001";
-const USER_SERVICE_URL = "http://itlm-user-cloudmapservice.itlm-user-namespace:3001";
+const USER_SERVICE_URL = process.env.USER_SERVICE_URL;
 const INTERNAL_API_SECRET = process.env.INTERNAL_API_SECRET || "my-super-secret-key";
 
 // Centralized header configuration for internal authentication
