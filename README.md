@@ -1211,6 +1211,27 @@ Health check endpoint.
 
 ---
 
+## Database bootstrap container (`init-rds`)
+
+The `init-rds` folder contains a lightweight Node.js container used to **bootstrap the shared PostgreSQL RDS instance** without exposing it publicly.
+In consideration of budget constraints, instead of running multiple RDS instances, we use a single instance, separated by schema. 
+Since the accoount is free tier, we also lack access to Aurora DB Cluster and RDS proxy for connection pooling
+
+This one‑shot container:
+
+- Fetches the RDS master credentials from AWS Secrets Manager (`fsd-rds-master-user`).
+- Ensures the application databases exist (`user_db`, `reminder_db`, `user_plant_db`, `proxy_db`).
+- Creates the shared `service_user` role and grants it the minimal privileges needed by each microservice.
+- Creates schemas/tables/indexes for:
+  - `users.user_list` (user-service)
+  - `reminders.reminder_list` (reminder-service)
+  - `user_plants.user_plant_list` (user-plants-service)
+  - `proxys.proxy_list` (proxy-service)
+
+It is intended to be run **inside the VPC** (e.g. as a one-off ECS task or part of an infra pipeline) so the RDS instance never needs a public endpoint or manual SQL setup.
+
+---
+
 ## Authentication
 
 ### JWT Token Format
