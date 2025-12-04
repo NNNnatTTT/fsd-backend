@@ -24,7 +24,7 @@ app.get("/allz", async (_req, res) => {
 app.get("/", (_req, res) => res.send("API is running"));
 
 // Actual
-app.use("/reminder", requireAuth, remindersRouter);
+app.use("/reminder", /*requireAuth,*/ remindersRouter);
 
 // Global Error Handler
 app.use((err, _req, res, _next) => {
