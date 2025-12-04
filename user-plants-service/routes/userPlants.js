@@ -42,8 +42,8 @@ router.get ("/v1/userPlant/:id", requireAuth, validateParams(schema.paramID), as
         id,
       });
 
-      if (!plant) return res.status(404).json({ error: "NotFound" });
-      return res.status(201).json({ plant });
+      // if (!plant) return res.status(404).json({ error: "NotFound" });
+      return res.status(200).json({ plant });
     } catch (e) {
       next(e)
     }
@@ -61,8 +61,8 @@ router.get ("/v1/userPlants", requireAuth, async(req, res, next) => {
         userID,
       });
 
-      if (!plants || plants.length === 0) return res.status(404).json({ error: "NotFound" });
-      return res.status(201).json({ plants });
+      // if (!plants || plants.length === 0) return res.status(404).json({ error: "NotFound" });
+      return res.status(200).json({ plants });
     } catch (e) {
       next(e)
     }
@@ -73,7 +73,7 @@ router.get ("/v1/userPlants", requireAuth, async(req, res, next) => {
 router.get ("/search", requireAuth, validateQuery(schema.searchSchema), async(req, res, next) => {
   try {
       const userID = await req.user?.id;
-      console.log(agentSUB);
+      console.log(userID);
 
       if (!userID) {
         return res.status(403).json({ error: "Forbidden", message: "Missing userID" });
@@ -84,7 +84,7 @@ router.get ("/search", requireAuth, validateQuery(schema.searchSchema), async(re
         userID,
       });
 
-      if (!plants || plants.length === 0) return res.status(404).json({ error: "NotFound" });
+      // if (!plants || plants.length === 0) return res.status(404).json({ error: "NotFound" });
       return res.status(200).json({ plants });
     } catch (e) {
       next(e)

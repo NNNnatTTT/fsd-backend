@@ -17,19 +17,19 @@ async function isElligible({userID, id}) {
     if (rows.length === 0) throw new upException.NotFoundError();
     return !!rows[0].eligible;
   } catch (e) {
-    console.error('Error reading agent: ', e)
+    console.error('Error reading user: ', e)
       // throw e;
       throw new upException.ForbiddenError();
   }
 }
 
-const USER_SERVICE_URL = "http://itlm-photo-cloudmapservice.itlm-photo-namespace:8000";
+const PHOTO_SERVICE_URL = process.env.PHOTO_URL;
 
 export async function getS3ID({file}) {
   try {
     const formData = new FormData();
     formData.append('file', file.buffer, { filename: file.originalname, contentType: file.mimetype });
-    const response = await axios.post(`${USER_SERVICE_URL}/upload`, formData,  {
+    const response = await axios.post(`${PHOTO_SERVICE_URL}/upload`, formData,  {
       headers: {
         ...formData.getHeaders(),
       },
@@ -68,12 +68,7 @@ async function createUserPlant({userID, file, name, notes}) {
 async function getProfileByID({ id }) {
   const client = await pool.connect();
   try {
-    // const selectByIDQuery = `
-    //   SELECT id, first_name, last_name, date_of_birth, gender, email, phone_number, 
-    //   address, city, state, country, postal, status, agent_id
-    //   FROM profiles.profile_list
-    //   WHERE id = $1;
-    // `;
+
 
     const result = await client.query(upQuery.devSelectByIDQuery, [id]);
     if (result.rowCount === 0) {
@@ -82,7 +77,7 @@ async function getProfileByID({ id }) {
     
     return result.rows[0] || null;
   } catch (e) {
-    console.error('Error reading agent: ', e)
+    console.error('Error reading user: ', e)
       throw e;
   } finally {
     client.release();
@@ -92,17 +87,13 @@ async function getProfileByID({ id }) {
 async function getAllProfiles() {
   const client = await pool.connect();
   try {
-    // const selectByIDQuery = `
-    //   SELECT id, first_name, last_name, date_of_birth, gender, email, phone_number, 
-    //   address, city, state, country, postal, status, agent_id
-    //   FROM profiles.profile_list
-    // `;
+
 
     const {rows} = await client.query(upQuery.devSelectAllQuery);
     
     return rows || null;
   } catch (e) {
-    console.error('Error reading agent: ', e)
+    console.error('Error reading user: ', e)
       throw e;
   } finally {
     client.release();
@@ -119,7 +110,7 @@ async function getUserPlantByID({id, userID}) {
     
     return result.rows[0] || null;
   } catch (e) {
-    console.error('Error reading agent: ', e)
+    console.error('Error reading user: ', e)
       throw e;
   } finally {
     client.release();
@@ -132,7 +123,7 @@ async function getUserPlantsByUserID({userID}) {
     const {rows} = await client.query(upQuery.getByUserIDQuery, [userID]);
     return rows || null;
   } catch (e) {
-    console.error('Error reading agent: ', e)
+    console.error('Error reading user: ', e)
       throw e;
   } finally {
     client.release();
