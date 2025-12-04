@@ -1,13 +1,11 @@
-# 🌱 PlantPal Login-Service
+# PlantPal Login-Service
 
 The **Login-Service** is one of the core microservices in the *PlantPal* ecosystem.  
 It handles **user authentication** and **registration orchestration**, issuing secure JWT tokens and coordinating with the **User-Service** to manage user data.
 
-This service demonstrates modern **DevOps**, **microservice orchestration**, and **DevSecOps** principles — fulfilling the key technical and conceptual requirements of the **CS302 IT Solution Lifecycle Management** project.
-
 ---
 
-## 🎯 Overview
+## Overview
 
 | Key Feature | Description |
 |--------------|-------------|
@@ -20,7 +18,7 @@ This service demonstrates modern **DevOps**, **microservice orchestration**, and
 
 ---
 
-## 🏗️ Architecture and Communication Pattern
+## Architecture and Communication Pattern
 
 Frontend → Login-Service → User-Service → Database
 │
@@ -35,7 +33,7 @@ This architecture cleanly separates **data ownership** and **authentication logi
 
 ---
 
-## ⚙️ Technical Implementation
+## Technical Implementation
 
 ### Core Libraries
 | Library | Purpose |
@@ -57,7 +55,7 @@ This architecture cleanly separates **data ownership** and **authentication logi
 
 ---
 
-## 🔒 DevSecOps Practices
+## Security Practices
 
 | Practice | Implementation |
 |-----------|----------------|
@@ -71,7 +69,7 @@ This architecture cleanly separates **data ownership** and **authentication logi
 
 ---
 
-## 🧰 DevOps and CI/CD Integration
+## DevOps and CI/CD Integration
 
 Each microservice (including this one) is:
 - Packaged into a Docker container (`Dockerfile`).
@@ -85,7 +83,7 @@ Pipeline stages include:
 
 ---
 
-## 🧪 Local Development (Docker Compose)
+## Local Development (Docker Compose)
 
 To run with `user-service`:
 
@@ -99,3 +97,98 @@ user-service: http://localhost:3001
 
 Both services communicate internally on the plantpal-net bridge network.
 
+---
+
+### Login Service API
+
+**Base URL**: `http://localhost:{PORT}` (configured via `PORT` environment variable)  
+**Technology**: Node.js, Express  
+**Database**: Communicates with User Service
+
+#### Routes
+
+##### `POST /auth/login`
+Authenticate a user and receive a JWT token.
+
+**Request Body:**
+```json
+{
+  "email": "user@example.com",
+  "password": "SecurePassword123!"
+}
+```
+
+**Validation:**
+- `email`: Valid email format (trimmed)
+- `password`: Required, minimum 1 character
+
+**Response (200 OK):**
+```json
+{
+  "message": "Login successful",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "user": {
+    "id": "uuid",
+    "email": "user@example.com",
+    "role": "gardener",
+    "phoneNumber": "+6512345678"
+  }
+}
+```
+
+**Error Responses:**
+- `401 Unauthorized`: Invalid email or password
+- `429 Too Many Requests`: Account locked after 5 failed attempts (locked for 5 minutes)
+- `500 Internal Server Error`: Authentication service error
+
+**Security Features:**
+- Account lockout after 5 consecutive failed login attempts
+- Lockout duration: 5 minutes
+- Password hashing verification using bcrypt
+- JWT token expiration: 1 hour
+
+##### `POST /auth/register`
+Register a new user account.
+
+**Request Body:**
+```json
+{
+  "email": "newuser@example.com",
+  "username": "newuser123",
+  "phoneNumber": "+6512345678",
+  "password": "SecurePassword123!",
+  "role": "gardener"
+}
+```
+
+**Validation:**
+- `email`: Valid email format (trimmed)
+- `username`: Minimum 3 characters, alphanumeric and underscores only (`^[A-Za-z0-9_]+$`)
+- `phoneNumber`: E.164 format (`^\+?[0-9]{8,15}$`)
+- `password`: 
+  - Minimum 8 characters
+  - Must contain uppercase letter
+  - Must contain lowercase letter
+  - Must contain number
+  - Must contain special character
+- `role`: Enum `["gardener", "admin"]`
+
+**Response (201 Created):**
+```json
+{
+  "message": "Registration successful",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}
+```
+
+**Error Responses:**
+- `409 Conflict`: User already exists
+- `400 Bad Request`: Validation error
+- `500 Internal Server Error`: Registration failed
+
+**Additional Endpoints:**
+- `GET /`: Service health check
+- `GET /health`: Health status with uptime
+- `GET /readiness`: Readiness check (verifies user-service dependency)
+- `GET /metrics`: Prometheus metrics endpoint
+- `GET /docs`: Swagger UI documentation (serves `openapi.yaml`)

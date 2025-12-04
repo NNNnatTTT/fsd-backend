@@ -44,7 +44,6 @@ app.use((err, _req, res, _next) => {
     return res.status(403).json({ error: "Forbidden" });
   }
 
-  // res.status(500).json({ error: "InternalServerError" });
   res.status(500).json({ details: err.message });
 });
 
@@ -63,19 +62,3 @@ function logPgError(e, ctx = "") {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Service listening on :${PORT}`));
-
-
-// async function main() {
-//   try {
-//     await initRemindersDB(dbPool); // 👈 initializes schema + table
-//     console.log("✅ Database initialized");
-
-//     const PORT = process.env.PORT || 3003;
-//     app.listen(PORT, () => console.log(`Service listening on :${PORT}`));
-//   } catch (e) {
-//     console.error("❌ Startup failed:", e);
-//     process.exit(1);
-//   }
-// }
-
-// main();

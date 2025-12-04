@@ -6,6 +6,7 @@ import * as schema from "../schemas/proxys.schema.js";
 
 const router = Router();
 
+// router.post ("/v1/proxy", requireAuth,  validate(schema.createSchema), async(req, res, next) => {
 router.post ("/v1/proxy/create", requireAuth,  validate(schema.createSchema), async(req, res, next) => {
   try {
       const userID = await req.user?.id;
@@ -65,7 +66,7 @@ router.get ("/v1/proxys", requireAuth, async(req, res, next) => {
     }
 });
 
-
+// router.get ("/v1/proxy/search", requireAuth, validateQuery(schema.searchSchema), async(req, res, next) => {
 router.get ("/search", requireAuth, validateQuery(schema.searchSchema), async(req, res, next) => {
   try {
       const userID = await req.user?.id;
@@ -86,26 +87,6 @@ router.get ("/search", requireAuth, validateQuery(schema.searchSchema), async(re
       next(e)
     }
 });
-
-// router.get ("/loose", requireAuth, validateQuery(schema.getschema), async(req, res, next) => {
-//   try {
-//       const adminID = req.user?.id;
-
-//       if (!adminID) {
-//         return res.status(403).json({ error: "Forbidden", message: "Missing adminID" });
-//       }
-
-//       const agents = await agentTX.looseGetAgentByAdminID({
-//         ...req.validated, 
-//         adminID,
-//       });
-
-//       if (!agents || agents.length === 0) return res.status(404).json({ error: "NotFound" });
-//       return res.status(201).json({ agents });
-//     } catch (e) {
-//       next(e)
-//     }
-// });
 
 router.put ("/v1/proxy/:id", requireAuth, validateParams(schema.paramID), validate(schema.updateSchema), async(req, res, next) => {
   try {

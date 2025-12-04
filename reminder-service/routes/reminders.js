@@ -6,6 +6,7 @@ import * as schema from "../schemas/reminders.schema.js";
 
 const router = Router();
 
+// router.post ("/v1/reminder", requireAuth, validate(schema.createReminderSchema), async(req, res, next) => {
 router.post ("/v1/reminder/create", requireAuth, validate(schema.createReminderSchema), async(req, res, next) => {
   try {
       const userID = await req.user?.id;
@@ -87,23 +88,6 @@ router.get("/v1/reminders/due", async (req, res, next) => {
   }
 });
 
-// router.get ("/dev/all", requireAuth, async(req, res, next) => {
-//   try {
-//       // const adminID = req.user?.id;
-
-//       // if (!adminID) {
-//       //   return res.status(403).json({ error: "Forbidden", message: "Missing adminID" });
-//       // }
-
-//       const agents = await profileTX.getAllProfiles();
-
-//       if (!agents || agents.length === 0) return res.status(404).json({ error: "No rows" });
-//       return res.status(201).json({ agents });
-//     } catch (e) {
-//       next(e)
-//     }
-// });
-
 router.get ("/testAdminID/:adminID", requireAuth, validateParams(schema.getAllAgentByAdminID), async(req, res, next) => {
   try {
       const adminID = req.user?.id;
@@ -120,47 +104,6 @@ router.get ("/testAdminID/:adminID", requireAuth, validateParams(schema.getAllAg
       next(e)
     }
 });
-
-// router.get ("/search", requireAuth, validateQuery(schema.searchSchema), async(req, res, next) => {
-//   try {
-//       const agentSUB = await req.user?.id;
-//       console.log(agentSUB);
-
-//       if (!agentSUB) {
-//         return res.status(403).json({ error: "Forbidden", message: "Missing agentSUB" });
-//       }
-
-//       const clients = await profileTX.searchProfile({
-//         ...req.validatedQuery, 
-//         agentSUB,
-//       });
-
-//       if (!clients || clients.length === 0) return res.status(404).json({ error: "NotFound" });
-//       return res.status(200).json({ clients });
-//     } catch (e) {
-//       next(e)
-//     }
-// });
-
-// router.get ("/loose", requireAuth, validateQuery(schema.getschema), async(req, res, next) => {
-//   try {
-//       const adminID = req.user?.id;
-
-//       if (!adminID) {
-//         return res.status(403).json({ error: "Forbidden", message: "Missing adminID" });
-//       }
-
-//       const agents = await agentTX.looseGetAgentByAdminID({
-//         ...req.validated, 
-//         adminID,
-//       });
-
-//       if (!agents || agents.length === 0) return res.status(404).json({ error: "NotFound" });
-//       return res.status(201).json({ agents });
-//     } catch (e) {
-//       next(e)
-//     }
-// });
 
 router.put ("/v1/reminder/:id", requireAuth, validateParams(schema.paramID), validate(schema.updateReminderSchema), async(req, res, next) => {
   try {

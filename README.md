@@ -8,18 +8,18 @@ This repository contains a microservices-based backend system for a plant care m
 - [Services](#services)
   - [1. Login Service](#1-login-service)
   - [2. User Service](#2-user-service)
-  - [3. Growth Service](#3-growth-service)
-  - [4. User Plants Service](#4-user-plants-service)
-  - [5. Reminder Service](#5-reminder-service)
-  - [6. Proxy Service](#6-proxy-service)
-  - [7. Photo Service](#7-photo-service)
-  - [8. Plant Doctor Service](#8-plant-doctor-service)
-  - [9. Plant Catalog Service](#9-plant-catalog-service)
-  - [10. Notification Service](#10-notification-service)
-  - [11. Scheduler Service](#11-scheduler-service)
+  - [3. User Plants Service](#4-user-plants-service)
+  - [4. Reminder Service](#5-reminder-service)
+  - [5. Proxy Service](#6-proxy-service)
+  - [6. Photo Service](#7-photo-service)
+  - [7. Plant Doctor Service](#8-plant-doctor-service)
+  - [8. Plant Catalog Service](#9-plant-catalog-service)
+  - [9. Notification Service](#10-notification-service)
+  - [10. Scheduler Service](#11-scheduler-service)
 - [Authentication](#authentication)
 - [Error Handling](#error-handling)
 - [Database Schemas](#database-schemas)
+- [Deployment pipeline](#Deployment-pipeline)
 
 ---
 
@@ -231,180 +231,7 @@ Get user by ID. Publicly accessible (no authentication required).
 
 ---
 
-### 3. Growth Service
-
-**Base URL**: `http://localhost:4004` (default)  
-**Technology**: Node.js, Express, Prisma  
-**Database**: Prisma ORM (database type depends on Prisma schema)
-
-#### Routes
-
-##### `POST /growth`
-Create a new growth record for a user plant.
-
-**Request Body:**
-```json
-{
-  "userPlantId": "uuid",
-  "imageUrl": "https://example.com/image.jpg",
-  "diagnosisResult": "healthy",
-  "confidence": 0.95
-}
-```
-
-**Validation:**
-- `userPlantId` (required): UUID string
-- `imageUrl` (required): String URL
-- `diagnosisResult` (required): String (diagnosis classification)
-- `confidence` (required): Number (0-1, confidence score)
-
-**Response (201 Created):**
-```json
-{
-  "id": "uuid",
-  "userPlantId": "uuid",
-  "imageUrl": "https://example.com/image.jpg",
-  "diagnosisResult": "healthy",
-  "confidence": 0.95,
-  "notes": null,
-  "createdAt": "2024-01-01T00:00:00.000Z",
-  "updatedAt": "2024-01-01T00:00:00.000Z"
-}
-```
-
-**Error Responses:**
-- `400 Bad Request`: Missing required fields
-- `500 Internal Server Error`: Failed to create record
-
-##### `GET /growth/plant/:userPlantId`
-List all growth records for a specific plant, ordered by creation date (newest first).
-
-**Path Parameters:**
-- `userPlantId` (required): UUID of the user plant
-
-**Response (200 OK):**
-```json
-[
-  {
-    "id": "uuid",
-    "userPlantId": "uuid",
-    "imageUrl": "https://example.com/image.jpg",
-    "diagnosisResult": "healthy",
-    "confidence": 0.95,
-    "notes": "Looking good!",
-    "createdAt": "2024-01-01T00:00:00.000Z",
-    "updatedAt": "2024-01-01T00:00:00.000Z"
-  }
-]
-```
-
-**Error Responses:**
-- `500 Internal Server Error`: Failed to fetch records
-
-##### `GET /growth/:recordId`
-Get a specific growth record by ID.
-
-**Path Parameters:**
-- `recordId` (required): UUID of the growth record
-
-**Response (200 OK):**
-```json
-{
-  "id": "uuid",
-  "userPlantId": "uuid",
-  "imageUrl": "https://example.com/image.jpg",
-  "diagnosisResult": "healthy",
-  "confidence": 0.95,
-  "notes": "Looking good!",
-  "createdAt": "2024-01-01T00:00:00.000Z",
-  "updatedAt": "2024-01-01T00:00:00.000Z"
-}
-```
-
-**Error Responses:**
-- `404 Not Found`: Record not found
-- `500 Internal Server Error`: Failed to fetch record
-
-##### `GET /growth/latest/:userPlantId`
-Get the most recent growth record for a specific plant.
-
-**Path Parameters:**
-- `userPlantId` (required): UUID of the user plant
-
-**Response (200 OK):**
-```json
-{
-  "id": "uuid",
-  "userPlantId": "uuid",
-  "imageUrl": "https://example.com/image.jpg",
-  "diagnosisResult": "healthy",
-  "confidence": 0.95,
-  "notes": "Looking good!",
-  "createdAt": "2024-01-01T00:00:00.000Z",
-  "updatedAt": "2024-01-01T00:00:00.000Z"
-}
-```
-
-**Error Responses:**
-- `404 Not Found`: No records found
-- `500 Internal Server Error`: Failed to fetch latest record
-
-##### `PUT /growth/:id/notes`
-Update the notes field of a growth record.
-
-**Path Parameters:**
-- `id` (required): UUID of the growth record
-
-**Request Body:**
-```json
-{
-  "notes": "Updated notes about the plant's growth"
-}
-```
-
-**Validation:**
-- `notes` (required): String
-
-**Response (200 OK):**
-```json
-{
-  "id": "uuid",
-  "userPlantId": "uuid",
-  "imageUrl": "https://example.com/image.jpg",
-  "diagnosisResult": "healthy",
-  "confidence": 0.95,
-  "notes": "Updated notes about the plant's growth",
-  "createdAt": "2024-01-01T00:00:00.000Z",
-  "updatedAt": "2024-01-01T00:00:00.000Z"
-}
-```
-
-**Error Responses:**
-- `400 Bad Request`: Notes are required
-- `500 Internal Server Error`: Failed to update notes
-
-##### `DELETE /growth/:id`
-Delete a growth record.
-
-**Path Parameters:**
-- `id` (required): UUID of the growth record
-
-**Response (200 OK):**
-```json
-{
-  "message": "Record deleted successfully"
-}
-```
-
-**Error Responses:**
-- `500 Internal Server Error`: Failed to delete record
-
-**Additional Endpoints:**
-- `GET /`: Health check - returns `{"ok": true, "service": "growth-service"}`
-
----
-
-### 4. User Plants Service
+### 3. User Plants Service
 
 **Base URL**: `http://localhost:3003` (default)  
 **Technology**: Node.js, Express, PostgreSQL  
@@ -596,7 +423,7 @@ Delete a user plant.
 
 ---
 
-### 5. Reminder Service
+### 4. Reminder Service
 
 **Base URL**: `http://localhost:3000` (default)  
 **Technology**: Node.js, Express, PostgreSQL  
@@ -812,7 +639,7 @@ Delete a reminder.
 
 ---
 
-### 6. Proxy Service
+### 5. Proxy Service
 
 **Base URL**: `http://localhost:3004` (default)  
 **Technology**: Node.js, Express, PostgreSQL  
@@ -1015,7 +842,7 @@ Delete a proxy.
 
 ---
 
-### 7. Photo Service
+### 6. Photo Service
 
 **Base URL**: `http://localhost:5000` (default)  
 **Technology**: Python, Flask  
@@ -1093,7 +920,7 @@ Redirects to presigned S3 URL (valid for 10 minutes)
 
 ---
 
-### 8. Plant Doctor Service
+### 7. Plant Doctor Service
 
 **Base URL**: `http://localhost:8080` (default)  
 **Technology**: Python, Flask  
@@ -1155,7 +982,7 @@ Predict plant disease from an uploaded image.
 
 ---
 
-### 9. Plant Catalog Service
+### 8. Plant Catalog Service
 
 **Base URL**: API Gateway endpoint (AWS Lambda)  
 **Technology**: Node.js, AWS Lambda  
@@ -1237,7 +1064,7 @@ Returns HTML content from Perenual API
 
 ---
 
-### 10. Notification Service
+### 9. Notification Service
 
 **Base URL**: AWS Lambda function  
 **Technology**: Node.js, AWS Lambda, Twilio  
@@ -1313,7 +1140,7 @@ It's time to {action} your {plantName}!
 
 ---
 
-### 11. Scheduler Service
+### 10. Scheduler Service
 
 **Base URL**: `http://localhost:4000` (default)  
 **Technology**: Node.js, TypeScript, Express  
@@ -1483,18 +1310,6 @@ Some services may return slightly different error formats. Refer to individual s
   - `created_at` (timestamp)
   - `deleted_at` (timestamp, nullable, soft delete)
 
-### Growth Service (Prisma)
-- Uses Prisma ORM
-- **Model**: `GrowthRecord`
-  - `id` (UUID, primary key)
-  - `userPlantId` (UUID, foreign key)
-  - `imageUrl` (string)
-  - `diagnosisResult` (string)
-  - `confidence` (float)
-  - `notes` (string, nullable)
-  - `createdAt` (timestamp)
-  - `updatedAt` (timestamp)
-
 ### User Plants Service (PostgreSQL)
 - **Schema**: `user_plants`
 - **Table**: `user_plant_list`
@@ -1543,9 +1358,6 @@ Some services may return slightly different error formats. Refer to individual s
 **User Service:**
 - Database connection variables (varies by setup)
 
-**Growth Service:**
-- `DATABASE_URL`: Prisma database connection string
-
 **Photo Service:**
 - `SECRET_NAME`: AWS Secrets Manager secret name (default: `fsd-s3-secret`)
 - `AWS_REGION`: AWS region
@@ -1577,19 +1389,18 @@ Some services may return slightly different error formats. Refer to individual s
 
 ## Service Dependencies
 
+Pipelines are consolidated from different repos and have been disabled "if:false" for submission.
+The yml files are configured to run as if in the specific service, but have been consolidated in 1 workflow folder for easy viewing overall.
+
 ```
 ┌─────────────────┐
 │  Login Service  │───► User Service
 └─────────────────┘
 
 ┌─────────────────┐
-│ Growth Service  │───► User Plants Service (via userPlantId)
-└─────────────────┘
-
-┌─────────────────┐
-│Scheduler Service│───► Reminder Service
-│                 │───► User Service
-│                 │───► Notification Service (Lambda)
+│    Scheduler    │───► Reminder Service
+│    Composite    │───► User Service
+│     service     │───► Notification Service (Lambda)
 └─────────────────┘
 
 ┌─────────────────┐
@@ -1604,6 +1415,10 @@ Some services may return slightly different error formats. Refer to individual s
 │Plant Catalog Svc│───► Perenual API
 └─────────────────┘
 ```
+
+---
+
+## Deployment pipeline
 
 ---
 

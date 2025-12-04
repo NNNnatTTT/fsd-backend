@@ -22,10 +22,10 @@ app.get("/allz", async (_req, res) => {
   catch (e) { res.status(503).send(e); console.log(e)}
 });
 
-// Root route
+// Health route
 app.get("/", (_req, res) => res.send("API is running"));
 
-// Actual
+// Root route
 app.use("/userPlant", requireAuth, remindersRouter);
 
 // Global Error Handler

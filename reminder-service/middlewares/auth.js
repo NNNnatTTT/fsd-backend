@@ -7,8 +7,6 @@ export function requireAuth(req, res, next) {
 
   try {
     const payload = jwt.verify(token, process.env.JWT_SECRET);
-    // e.g. payload = { id: "...", role: "admin" }
-    // req.user = payload;
     req.user = {
       id: payload.id,
       email: payload.email,
@@ -23,8 +21,6 @@ export function requireAuth(req, res, next) {
 
 // (TEST ONLY)
 export function requireAuthTEST(req, _res, next) {
-  // req.user.id = req.user.sub;
-  // req.user = { id: "11111111-1111-1111-1111-111111111111", role: "gardener" };
   req.user = {id : "24988448-20a1-7025-59a4-e27cbfdd22ef", role: "gardener"};
   next();
 }

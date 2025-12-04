@@ -1,5 +1,5 @@
 {
-  "name": "profile-service",
+  "name": "reminder-service",
   "version": "1.0.0",
   "description": "",
   "main": "server.js",

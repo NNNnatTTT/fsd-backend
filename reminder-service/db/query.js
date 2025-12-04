@@ -82,32 +82,6 @@ const getDueSoonQuery = `
     END ASC;
 `;
 
-
-
-// const searchQuery = `
-//     SELECT id, schedule_id, user_id, name, notes, due_at, created_at, updated_at
-//     FROM 
-//         reminders.reminder_list
-//     WHERE 
-//         user_id = $2
-//         AND (
-//                 (first_name       ILIKE $1::text)
-//             OR (last_name         ILIKE $1::text)
-//             OR (email             ILIKE $1)
-//             OR translate(phone_number, ' -', '') ILIKE '%' || translate($1::text, ' -', '') || '%'
-//             OR (address           ILIKE $1::text)
-//             OR (city              ILIKE $1::text)
-//             OR (state             ILIKE $1::text)
-//             OR (country           ILIKE $1::text)
-//             OR (postal            ILIKE $1::text)
-//         )
-//     ORDER BY 
-//         created_at DESC, 
-//         agent_ID DESC
-//     LIMIT $3 OFFSET $4;
-// `;
-// ORDER BY created_at DESC, agent_ID DESC LIMIT 10;
-
 async function dynamicUpdate(fields) {
     const updateQuery = `
         UPDATE reminders.reminder_list

@@ -8,7 +8,7 @@ from botocore.exceptions import ClientError
 from flask import Flask, request, jsonify, redirect, abort
 from werkzeug.utils import secure_filename
 
-# ---------- Read config once from Secrets Manager ----------
+# Read config once from Secrets Manager
 SECRET_NAME = os.environ.get("SECRET_NAME", "fsd-s3-secret")
 SM_REGION = os.environ.get("AWS_REGION") or os.environ.get("AWS_DEFAULT_REGION")  # optional
 
@@ -39,7 +39,7 @@ if cfg.get("AWS_ACCESS_KEY_ID") and cfg.get("AWS_SECRET_ACCESS_KEY"):
 
 s3 = boto3.client("s3", **s3_kwargs)
 
-# ---------- Flask app ----------
+# Flask app for photo service
 app = Flask(__name__)
 app.config["MAX_CONTENT_LENGTH"] = MAX_CONTENT_LENGTH_MB * 1024 * 1024
 

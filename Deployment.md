@@ -1,8 +1,8 @@
-# CS464 Group 9 – Plant Care System Deployment Guide
+# CS464 Group 9 – PlantPal System Deployment Guide
 
 ## 1. Overview
 
-This document explains how to manually set up our **Plant Care System** on AWS.
+This document explains how to manually set up our **PlantPal** on AWS.
 
 The system provides:
 - A set of backend microservices (login, user, plants, plant catalogue, photo upload, plant doctor, proxy, scheduler, reminder).

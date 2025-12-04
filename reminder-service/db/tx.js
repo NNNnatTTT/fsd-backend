@@ -1,4 +1,3 @@
-// import pool from "./pool.js";
 import { dbPool } from "./pool.js";
 import * as reminderQuery from "./query.js";
 import * as reminderException from "../utils/exceptions.js";
@@ -13,7 +12,6 @@ async function isElligible({userID, id}) {
     return !!rows[0].eligible;
   } catch (e) {
     console.error('Error reading agent: ', e)
-      // throw e;
       throw new reminderException.ForbiddenError();
   }
 }
@@ -42,13 +40,6 @@ async function createReminder({userID, name, notes, isActive, dueAt, dueDay, isP
 async function getProfileByID({ id }) {
   const client = await pool.connect();
   try {
-    // const selectByIDQuery = `
-    //   SELECT id, first_name, last_name, date_of_birth, gender, email, phone_number, 
-    //   address, city, state, country, postal, status, agent_id
-    //   FROM profiles.profile_list
-    //   WHERE id = $1;
-    // `;
-
     const result = await client.query(reminderQuery.devSelectByIDQuery, [id]);
     if (result.rowCount === 0) {
       throw new reminderException.NotFoundError();
@@ -66,12 +57,6 @@ async function getProfileByID({ id }) {
 async function getAllProfiles() {
   const client = await pool.connect();
   try {
-    // const selectByIDQuery = `
-    //   SELECT id, first_name, last_name, date_of_birth, gender, email, phone_number, 
-    //   address, city, state, country, postal, status, agent_id
-    //   FROM profiles.profile_list
-    // `;
-
     const {rows} = await client.query(reminderQuery.devSelectAllQuery);
     
     return rows || null;
@@ -140,28 +125,6 @@ async function getRemindersDueSoon({ windowSec }) {
   }
 }
 
-
-
-// async function searchProfile ({agentSUB, searchValue, limit, offset}) {
-//   const client = await pool.connect();
-//   try {
-//     const { rows } = await client.query(profileQuery.searchQuery, [
-//       searchValue ? `%${searchValue}%` : null,
-//       agentSUB, limit, offset
-//     ]);
-//     if (rows.length === 0) {
-//       throw new profileException.NotFoundError();
-//     }
-//     console.log(rows);
-//     return rows || null;
-//   } catch (e) {
-//     console.error('Error reading agent: ', e)
-//       throw e;
-//   } finally {
-//     client.release();
-//   }
-// }
-
 async function updateReminder({ id, userID, name, notes, isActive, dueAt, dueDay, isProxy, proxy }) {
   const client = await pool.connect();
   try {
@@ -209,12 +172,10 @@ async function updateReminder({ id, userID, name, notes, isActive, dueAt, dueDay
   }
 }
 
-// async function deleteReminder({id, userID}) {
 async function deleteReminder({id, userID}) {
   const client = await pool.connect();
   try {
     const ok = await isElligible({ id, userID, client});
-    // const ok = await isElligible({ id, userID, client});
     if (!ok) throw new Error('Not Elligible');
 
     await client.query('BEGIN');

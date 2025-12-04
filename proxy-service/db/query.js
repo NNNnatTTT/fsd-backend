@@ -69,20 +69,6 @@ async function dynamicUpdate(fields) {
     return updateQuery;
 } 
 
-// const softDeleteQuery = `
-//     UPDATE proxy.proxy_list
-//     SET 
-//         deleted_by = $2, 
-//         deleted_at = now(), 
-//         updated_at = now(), 
-//         delete_reason = $3
-//     WHERE 
-//         id = $1
-//         AND agent_ID = $2
-//         AND deleted_at IS NULL
-//     RETURNING id, deleted_at
-// `;
-
 const deleteQuery = `
     DELETE FROM proxys.proxy_list
     WHERE

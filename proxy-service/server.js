@@ -6,7 +6,6 @@ import { requireAuth } from "./middlewares/auth.js";
 
 import 'dotenv/config';
 
-
 const app = express();
 app.use(helmet());
 app.use(express.json({ limit: "1mb" }));
@@ -22,10 +21,10 @@ app.get("/allz", async (_req, res) => {
   catch (e) { res.status(503).send(e); console.log(e)}
 });
 
-// Root route
+// Health route
 app.get("/", (_req, res) => res.send("API is running"));
 
-// Actual
+// Root route
 app.use("/proxy", requireAuth, remindersRouter);
 
 // Global Error Handler
@@ -50,6 +49,7 @@ app.use((err, _req, res, _next) => {
   res.status(500).json({ details: err.message });
 });
 
+// Additional CloudWatch logging
 function logPgError(e, ctx = "") {
   console.error(`error?: ${ctx}`);
   console.error("message:", e.message);

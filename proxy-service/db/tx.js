@@ -1,12 +1,6 @@
-// import pool from "./pool.js";
 import { dbPool } from "./pool.js";
 import * as proxyQuery from "./query.js";
 import * as proxyException from "../utils/exceptions.js";
-// import axios from "axios";
-// import axiosRetry from "axios-retry";
-// import FormData from "form-data";
-
-// axiosRetry(axios, { retries: 3, retryDelay: axiosRetry.exponentialDelay });
 
 const pool = dbPool;
 
@@ -22,26 +16,6 @@ async function isElligible({userID, id}) {
       throw new proxyException.ForbiddenError();
   }
 }
-
-// const USER_SERVICE_URL = "http://fsd-photo-cloudmapservice.fsd-photo-namespace:8000";
-
-// async function getS3ID({file}) {
-//   try {
-//     const formData = new FormData();
-//     formData.append('file', file.buffer, { filename: file.originalname, contentType: file.mimetype });
-//     const response = await axios.post(`${USER_SERVICE_URL}/upload`, formData,  {
-//       headers: {
-//         ...formData.getHeaders(),
-//       },
-//       timeout: 2000,
-//     });
-//     return response.data.url;
-//   } catch (err) {
-//     if (err.response?.status === 404) return null;
-//     console.error("photo-service POST error:", err.message);
-//     throw err;
-//   }
-// }
 
 async function createProxy({userID, name, startDate, endDate, phoneNumber}) {
   const client = await pool.connect();
@@ -67,12 +41,6 @@ async function createProxy({userID, name, startDate, endDate, phoneNumber}) {
 async function getProfileByID({ id }) {
   const client = await pool.connect();
   try {
-    // const selectByIDQuery = `
-    //   SELECT id, first_name, last_name, date_of_birth, gender, email, phone_number, 
-    //   address, city, state, country, postal, status, agent_id
-    //   FROM profiles.profile_list
-    //   WHERE id = $1;
-    // `;
 
     const result = await client.query(proxyQuery.devSelectByIDQuery, [id]);
     if (result.rowCount === 0) {
@@ -91,11 +59,6 @@ async function getProfileByID({ id }) {
 async function getAllProfiles() {
   const client = await pool.connect();
   try {
-    // const selectByIDQuery = `
-    //   SELECT id, first_name, last_name, date_of_birth, gender, email, phone_number, 
-    //   address, city, state, country, postal, status, agent_id
-    //   FROM profiles.profile_list
-    // `;
 
     const {rows} = await client.query(proxyQuery.devSelectAllQuery);
     

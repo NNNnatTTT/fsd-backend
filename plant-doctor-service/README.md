@@ -1,4 +1,4 @@
-# Plant Doctor Service 🌿
+# Plant Doctor Service 
 
 A Flask-based microservice that provides plant disease diagnosis using a TensorFlow model hosted on AWS SageMaker. The service accepts plant leaf images and returns predictions for various disease conditions.
 
